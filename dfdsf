@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+
+
+<script src="js/loadbar.js"></script>
+
+
+    <meta charset="utf-8">   
+    <title>Albridge</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+   
+   <link href="css/mui.css" rel="stylesheet" type="text/css" />
+    <script src="js/mui.js"></script>
+   <link href="css/bootstrap.css" rel="stylesheet" id="bootstrap-css">
+      <link href="css/collapse.css" rel="stylesheet" >
+  <link href="css/animate.css" rel="stylesheet" >
+    <script src="js/jquery-1.12.3.js"></script>
+    <script src="js/bootstrap.js"></script>
+     <script src="js/alasql.min.js"></script>
+    <script src="js/angular.js" ></script>
+    <script src="js/loadJson.js"></script>
+   
+    <script>
+    function TimeStamp(){
+    var d = new Date();   
+document.getElementById("timestamp").innerHTML = "As of Time: "+d.toLocaleDateString()+" "+d.toLocaleTimeString();
+
+if (window.location.hash=="")
+	{
+	document.getElementById("reloadCB").checked=true;
+window.location.replace("#autoreload");
+checkReloading();
+    }
+
+    }
+</script>
+ <script type="text/JavaScript">
+ var reloading;
+
+ function checkReloading() {
+     if (window.location.hash=="#autoreload") {
+         reloading=setTimeout("window.location.reload();", 5000);
+         document.getElementById("reloadCB").checked=true;
+         
+      
+     }
+ }
+
+ function toggleAutoRefresh(cb) {
+     if (cb.checked) {
+    
+         window.location.replace("#autoreload");
+         reloading=setTimeout("window.location.reload();", 5000);
+     } else {
+         window.location.replace("#");
+         clearTimeout(reloading);
+     }
+ }
+
+ window.onload=checkReloading;
+      </script>
+   
+</head>
+<body style="background-color: #0e2a36; " onload="TimeStamp(); ">
+  <div class="docs-header">
+      <div class="topic">
+        <div align = "left" class="container">
+			<div class="col-md-8">
+	 		   <h3>Welcome to Albridge</h3>								          
+</div>			
+  </div>
+        <div align = "left" class="topic__infos">
+          <div  class="container">  
+           <h4>Dashboard</h4>    
+          </div>
+        </div>
+      </div>
+    </div>    
+ <div class="bg">
+	<div class="container fadeInUp animated"> 
+	<table style="width:100%;">
+	<tr>
+	<td>
+     <button class="mui-btn mui-btn--primary mui-btn--raised " onclick="setInterval();"id="refressh">Refresh</button>
+      </td>  					
+ 
+
+<td >
+     <label class="white">Auto Refresh</label>  
+    <input class='tgl tgl-ios' id='reloadCB'onclick="toggleAutoRefresh(this);"  type='checkbox' >
+    <label class='tgl-btn'  for='reloadCB'></label>
+</td>
+<td align="right">
+        	<label class="white" id="timestamp"></label> 				
+        				</td></tr></table>
+        					
+    <div class="row">
+    
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-custom">
+                <div class="panel-heading" role="tab" id="headingThree">
+                <table>
+<tr>
+<th>JobType</th><th>EnvId</th><th>Active</th><th>Completed</th><th>Errors</th><th>Terminated</th><th>Paused</th>
+</tr>
+</table>
+                </div>
+                </div>
+             <div class="panel panel-custom">
+                <div class="panel-heading" role="tab" id="headingThree">
+                    <h4 class="panel-title">
+                   <div ng-controller="jsonCtrl"> 
+                    <table>
+                    <tr><td>
+                                     
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="false" aria-controls="collapseThree">                            
+                            <i class="glyphicon glyphicon-plus"></i>      </a> 
+                         <a  class="linkz" href="#">WSO</a> </td><td>ALL</td><td>{{totalActive("WSO")}}</td><td>{{totalCompleted("WSO")}}</td><td>{{totalErrors("WSO")}}</td><td>{{totalTerminated("WSO")}}</td><td>{{totalPaused("WSO")}}</td></tr>
+                  </table></div>
+                </h4>
+                </div>
+                <div id="collapse1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                    <div class="panel-body animated zoomOut">
+                     <div ng-controller="jsonCtrl">
+                        <table >
+                       <tr ng-repeat="resource in sample | filter: { Jobtype: 'WSO' }">
+                             <td></td>
+                             <td ><a class="sublinkz" href="#">{{ resource.Envid }}</a></td>
+                            <td>{{ resource.Active }}</td>
+                            <td>{{ resource.Completed }}</td>
+                            <td>{{ resource.Errors }}</td>
+                            <td>{{ resource.Terminated }}</td>
+                            <td>{{ resource.Paused }}</td>                                           
+                        </tr> 
+                           <tr></tr>
+                        </table>
+                        </div></div>
+                </div>
+            </div>
+        
+            <div class="panel panel-custom">
+                <div class="panel-heading" role="tab" id="headingTwo">
+                    <h4 class="panel-title">
+                    <div ng-controller="jsonCtrl"> 
+                    <table>
+                    <tr><td>
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <i class="glyphicon glyphicon-plus"></i> </a>
+                            <a class="linkz" href="#">PBD</a></td><td>ALL</td><td>{{totalActive("PBD")}}</td><td>{{totalCompleted("PBD")}}</td><td>{{totalErrors("PBD")}}</td><td>{{totalTerminated("PBD")}}</td><td>{{totalPaused("PBD")}}</td></tr>
+                  </table></div>
+						</h4>
+                       
+                 
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                    <div class="panel-body animated zoomOut">
+                        <div ng-controller="jsonCtrl">
+                        <table >
+                       <tr ng-repeat="resource in sample | filter: { Jobtype: 'PBD' }">
+                             <td></td>
+                             <td><a class="sublinkz" href="#">{{ resource.Envid }}</a></td>
+                            <td>{{ resource.Active }}</td>
+                            <td>{{ resource.Completed }}</td>
+                            <td>{{ resource.Errors }}</td>
+                            <td>{{ resource.Terminated }}</td>
+                            <td>{{ resource.Paused }}</td>
+                            
+                        </tr>          
+                        </table>
+                        </div>
+                       </div>
+                </div>
+            </div>
+            <div class="panel panel-custom">
+                <div class="panel-heading" role="tab" id="headingThree">
+                    <h4 class="panel-title">
+                    <div ng-controller="jsonCtrl"> 
+                    <table>
+                    <tr><td>
+                                     
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">                            
+                            <i class="glyphicon glyphicon-plus"></i>      </a> 
+                          <a class="linkz" href="#"> QPR</a></td><td>ALL</td><td>{{totalActive("QPR")}}</td><td>{{totalCompleted("QPR")}}</td><td>{{totalErrors("QPR")}}</td><td>{{totalTerminated("QPR")}}</td><td>{{totalPaused("QPR")}}</td></tr>
+                  </table></div>
+					</h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                    <div class="panel-body animated zoomOut">
+                         <div ng-controller="jsonCtrl">
+                        <table >
+                     <tr ng-repeat="resource in sample | filter: { Jobtype: 'QPR' }">
+                             <td></td>
+                             <td><a class="sublinkz" href="#">{{ resource.Envid }}</a></td>
+                            <td>{{ resource.Active }}</td>
+                            <td>{{ resource.Completed }}</td>
+                            <td>{{ resource.Errors }}</td>
+                            <td>{{ resource.Terminated }}</td>
+                            <td>{{ resource.Paused }}</td>
+                            
+                        </tr>          
+                        </table>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+</div>
+	<script type="text/javascript">
+	$(function() {
+
+    function toggleChevron(e) {
+        $(e.target)
+                .prev('.panel-heading')
+                .find("i")
+                .toggleClass('rotate-icon');
+        $('.panel-body.animated').toggleClass('zoomIn zoomOut');
+    }
+    
+    $('#accordion').on('hide.bs.collapse', toggleChevron);
+    $('#accordion').on('show.bs.collapse', toggleChevron);
+})
+
+$('#refresh').click(function() {
+    location.reload();
+});
+	</script>
+	
+</body>
+</html>
