@@ -1,0 +1,101 @@
+package com.albridge.dashboard.servlets;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import com.albridge.dashboard.util.InitialConfig;
+
+@WebServlet("/SampleServlet")
+public class SampleServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.setContentType("application/json");
+		File f = new File(getServletContext().getRealPath("mockJson/mock.json"));
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(f))) {
+			   String line = null;
+			   while ((line = br.readLine()) != null) {
+				   response.getWriter().print(line);
+			   }
+			}
+	
+	}
+
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+	
+	
+
+}
+
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------
+
+
+package com.albridge.dashboard.util;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import com.albridge.dashboard.dao.DataLink;
+
+
+@WebServlet("/InitialConfig") 
+public class InitialConfig extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private static int refreshDuration;
+	public static boolean dbOrJson;
+
+
+    public InitialConfig() {
+        super();
+        }
+
+	public void init(ServletConfig config) throws ServletException {
+		// TODO Auto-generated method stub
+		Properties prop = new Properties();
+        InputStream inputStream = DataLink.class.getClassLoader().getResourceAsStream("/db.properties");
+        try {
+			prop.load(inputStream);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        dbOrJson = Boolean.valueOf(prop.getProperty("db"));
+       
+		
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			
+		response.getWriter().print(dbOrJson);
+		response.getWriter().print("Initalized");	
+		
+	}
+}
+
+
